@@ -158,12 +158,26 @@ router.post("/updatePassword",[
     }
 })
 
+router.post("/checkToken",async(req,res)=>{
+    try {
+        let authToken=req.body.authToken
+        let decoded = jwt.decode(authToken, {complete: true}) ;
+        let payload = decoded.payload ;
+        let fool=await User.findOne({'email':payload.email})
+        if(fool!=null) return res.json({ success: true})
+        return res.json({ success: false})
+    } catch (error) {
+        console.log(error)
+        return res.json({success:false})
+    }
+    
+})
 router.post("/getUserDetails",async(req,res)=>{
     try {
         let authToken=req.body.authToken
         let decoded = jwt.decode(authToken, {complete: true}) ;
         let payload = decoded.payload ;
-        console.log("payload" , payload)
+        // console.log("payload" , payload)
         return res.json({ success: true,data:payload })
     } catch (error) {
         console.log(error)
